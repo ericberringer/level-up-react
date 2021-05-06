@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 
-
 export const GameContext = React.createContext()
 
 export const GameProvider = (props) => {
