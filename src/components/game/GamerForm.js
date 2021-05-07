@@ -113,7 +113,6 @@ export const GameForm = () => {
                         skillLevel: parseInt(currentGame.skillLevel),
                         gameTypeId: parseInt(currentGame.gameTypeId)
                     }
-                    console.log(game)
                     // Send POST request to your API
                     createGame(game)
                         .then(() => history.push("/"))
