@@ -5,7 +5,7 @@ import { EventList } from "./event/EventList.js"
 import { EventProvider } from "./event/EventProvider.js"
 import { GameList } from "./game/GameList.js"
 import { GameProvider } from "./game/GameProvider.js"
-import { GameForm } from "./game/GamerForm.js"
+import { GameForm } from "./game/GameForm.js"
 
 export const ApplicationViews = () => {
     return <>
