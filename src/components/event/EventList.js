@@ -25,8 +25,10 @@ export const EventList = () => {
             {
                 events.map(event => {
                     return <section key={event.id} className="registration">
-                        <div className="registration__game">{event.game.title}</div>
+                        <h2 className="registration__game">{event.game.title}</h2>
+                        <h3>Event Details</h3>
                         <div>{event.description}</div>
+                        <h3>Date</h3>
                         <div>
                             {event.date} @ {event.time}
                         </div>
