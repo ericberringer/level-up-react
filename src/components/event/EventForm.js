@@ -1,4 +1,3 @@
-import { createEvent } from "@testing-library/dom"
 import React, { useContext, useState, useEffect } from "react"
 import { useHistory } from "react-router-dom"
 import { GameContext } from "../game/GameProvider"

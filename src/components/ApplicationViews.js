@@ -6,6 +6,8 @@ import { EventProvider } from "./event/EventProvider.js"
 import { GameList } from "./game/GameList.js"
 import { GameProvider } from "./game/GameProvider.js"
 import { GameForm } from "./game/GameForm.js"
+import { ProfileProvider } from "./profile/ProfileProvider.js"
+import { Profile } from "./profile/Profile.js"
 
 export const ApplicationViews = () => {
     return <>
@@ -43,6 +45,20 @@ export const ApplicationViews = () => {
                         <EventForm />
                     </Route>
 
+                </EventProvider>
+            </GameProvider>
+
+                {/* ############# Profile ############# */}
+
+            <GameProvider>
+                <EventProvider>
+                    <ProfileProvider>
+
+                        <Route exact path="/profile">
+                            <Profile />
+                        </Route>
+                    
+                    </ProfileProvider>
                 </EventProvider>
             </GameProvider>
 
