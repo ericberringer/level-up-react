@@ -30,6 +30,7 @@ export const GameList = () => {
                         <h3 className="game__title">{game.title} by {game.maker}</h3>
                         <div className="game__players">{game.number_of_players} players needed</div>
                         <div className="game__skillLevel">Skill level is {game.skill_level}</div>
+                        <div className="game__gameType">Game Type: {game.game_type.label}</div>
                         <div className="game__edit">
                         <h3>Upcoming Events</h3>
                         {
