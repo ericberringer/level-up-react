@@ -1,13 +1,14 @@
 import React, { useContext, useState, useEffect } from "react"
 import { GameContext } from "./GameProvider.js"
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
 
 export const GameForm = props => {
 
     const history = useHistory()
+    const { gameId } = useParams()
 
-    const { createGame, getGameTypes, gameTypes, getGames, editGame } = useContext(GameContext)
+    const { createGame, getGameTypes, gameTypes, getGameById, updateGame } = useContext(GameContext)
 
     /*
         Since the input fields are bound to the values of
@@ -26,23 +27,47 @@ export const GameForm = props => {
         Get game types on initialization so that the <select>
         element presents game type choices to the user.
     */
+    const handleSaveGame = () => {
+        if (gameId) {
+            updateGame({
+                id: gameId,
+                skillLevel: parseInt(currentGame.skillLevel),
+                numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                title: currentGame.title,
+                maker: currentGame.maker,
+                gameTypeId: parseInt(currentGame.gameTypeId)
+            })
+            .then(() => history.push(`/`))
+        } else {
+            createGame({
+                skillLevel: parseInt(currentGame.skillLevel),
+                numberOfPlayers: parseInt(currentGame.numberOfPlayers),
+                title: currentGame.title,
+                maker: currentGame.maker,
+                gameTypeId: parseInt(currentGame.gameTypeId)
+            })
+            .then(() => history.push("/"))
+        }
+    }
+    
     useEffect(() => {
         getGameTypes()
     }, [])
 
     useEffect(() => {
-        if ("gameId" in props.match.params) {
-            getGames(props.match.params.gameId).then(game => {
-                setCurrentGame({
-                    skillLevel: game?.skill_level,
-                    numberOfPlayers: game?.number_of_players,
-                    title: game?.title,
-                    gameTypeId: game?.game_type.id,
-                    maker: game?.maker
+        if (gameId) {
+            getGameById(gameId)
+                .then(game => {
+                    setCurrentGame({
+                        skillLevel: game.skill_level,
+                        numberOfPlayers: game.number_of_players,
+                        title: game.title,
+                        maker: game.maker,
+                        gameTypeId: game.game_type.id
+                    })
                 })
-            })
         }
-    }, [props.match.params.gameId])
+    }, [gameId])
 
     /*
         REFACTOR CHALLENGE START
@@ -62,7 +87,7 @@ export const GameForm = props => {
 
     return (
         <form className="gameForm">
-            {("gameId" in props.match.params) ? <h2 className="editGameForm__title">Edit Game</h2> : <h2 className="gameForm__title">Register New Game</h2>}
+            {gameId ? <h2 className="editGameForm__title">Edit Game</h2> : <h2 className="gameForm__title">Register New Game</h2>}
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Title: </label>
@@ -102,7 +127,7 @@ export const GameForm = props => {
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="gameTypeId">Game Type: </label>
-                    <select defaultValue="" name="gameTypeId" className="form-control" onChange={handleControlledInputChange}>
+                    <select value={currentGame.gameTypeId} name="gameTypeId" className="form-control" onChange={handleControlledInputChange}>
                         <option value="0">Select a game type:</option>
                         {gameTypes.map(e => (
                             <option key={e.id} value={e.id}>
@@ -112,48 +137,12 @@ export const GameForm = props => {
                     </select>
                 </div>
             </fieldset>
-             {
-                ("gameId" in props.match.params)
-                ?
-                <button
-                    onClick={evt => {
-                        // Prevent form from being submitted
-                        evt.preventDefault()
-
-                        const game = {
-                            id: props.match.params.gameId,
-                            maker: currentGame.maker,
-                            title: currentGame.title,
-                            numberOfPlayers: parseInt(currentGame.numberOfPlayers),
-                            skillLevel: parseInt(currentGame.skillLevel),
-                            gameTypeId: parseInt(currentGame.gameTypeId)
-                        }
-                        // Send POST request to your API
-                        editGame(game)
-                            .then(() => history.push("/"))
-                    }}
-                    className="btn btn-2 btn-sep icon-create">Update Game</button> 
-
-                    : 
-                    
-                    <button type="submit"
-                    onClick={evt => {
-                        // Prevent form from being submitted
-                        evt.preventDefault()
-
-                        const game = {
-                            maker: currentGame.maker,
-                            title: currentGame.title,
-                            numberOfPlayers: parseInt(currentGame.numberOfPlayers),
-                            skillLevel: parseInt(currentGame.skillLevel),
-                            gameTypeId: parseInt(currentGame.gameTypeId)
-                        }
-                        // Send POST request to your API
-                        createGame(game)
-                            .then(() => history.push("/"))
-                    }}
-                    className="btn btn-2 btn-sep icon-create">Create</button>
-             }               
+            <button className="btn btn-2 btn-sep icon-create"
+            type="submit"
+            onClick={evt => {
+                evt.preventDefault()
+                handleSaveGame()
+            }}>{gameId ? "Save" : "Create"}</button>               
         </form>
     )
 }

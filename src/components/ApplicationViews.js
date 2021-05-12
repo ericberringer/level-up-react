@@ -30,7 +30,9 @@ export const ApplicationViews = () => {
                         <GameForm />
                     </Route>
 
-                    <Route exact path="/games/:gameId(\d+)/edit" render={props => <GameForm {...props} />} />
+                    <Route exact path="/games/:gameId(\d+)/edit">
+                        <GameForm />
+                    </Route>
 
                     </ProfileProvider>
                 </EventProvider>
